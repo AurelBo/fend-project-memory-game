@@ -1,7 +1,35 @@
 /*
  * Create a list that holds all of your cards
  */
+const iconsOfCards = [
+  "fa-diamond",
+  "fa-diamond",
+  "fa-paper-plane-o",
+  "fa-paper-plane-o",
+  "fa-anchor",
+  "fa-anchor",
+  "fa-bolt",
+  "fa-bolt",
+  "fa-cube",
+  "fa-cube",
+  "fa-leaf",
+  "fa-leaf",
+  "fa-bicycle",
+  "fa-bicycle",
+  "fa-bomb",
+  "fa-bomb",
+];
 
+
+// Generate cards
+const container = document.querySelector(".deck");
+
+for (let i = 0; i < iconsOfCards.length; i++) {
+    const createCards = document.createElement("li");
+    createCards.classList.add("card");
+    createCards.innerHTML = `<i class="fa ${iconsOfCards[i]}"></i>`;
+    container.appendChild(createCards);
+}
 
 /*
  * Display the cards on the page
