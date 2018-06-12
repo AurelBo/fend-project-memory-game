@@ -1,7 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
-const iconsOfCards = [
+const cards = [
   "fa-diamond",
   "fa-diamond",
   "fa-paper-plane-o",
@@ -17,19 +17,23 @@ const iconsOfCards = [
   "fa-bicycle",
   "fa-bicycle",
   "fa-bomb",
-  "fa-bomb",
+  "fa-bomb"
 ];
 
 
 // Generate cards
-const container = document.querySelector(".deck");
+/* const container = document.querySelector(".deck");
 
 for (let i = 0; i < iconsOfCards.length; i++) {
     const createCards = document.createElement("li");
     createCards.classList.add("card");
     createCards.innerHTML = `<i class="fa ${iconsOfCards[i]}"></i>`;
     container.appendChild(createCards);
-}
+} */
+
+function generateCard(card) {
+  return `<li class="card" data-card="${card}"><i class="fa ${card}"></i></li>`;
+};
 
 /*
  * Display the cards on the page
@@ -40,17 +44,19 @@ for (let i = 0; i < iconsOfCards.length; i++) {
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
 
-    return array;
+  return array;
 }
 
 
@@ -65,12 +71,61 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+ // from FEND webinar
+
+ function initGame() {
+     const deck = document.querySelector('.deck');
+     let moveCounter = document.querySelector('.moves');
+
+     const cardHTML = shuffle(cards).map(function(card) {
+         return generateCard(card);
+     });
+     moves = 0;
+     moveCounter.innerText = moves;
+
+     deck.innerHTML = cardHTML.join('');
+}
+
+initGame();
+
 
  const deckOfCards = document.querySelectorAll('.card');
- const openCards = [];
+
+ //keeping track of the game
+ let openedCards = [];
+
+
+ // Opening and comparing cards
 
  deckOfCards.forEach(function(card) {
-     card.addEventListener('click',function(event) {
-         card.classList.add('open', 'show');
-     })
- })
+     card.addEventListener('click',function(e) {
+      
+         if (!card.classList.contains('open') && !card.classList.contains('show')) {
+             openedCards.push(card);
+             card.classList.add("open", "show");
+
+             if (openedCards.length > 2){
+                 card.classList.remove("open", "show");
+             } else if (openedCards.length == 2) {
+
+                 if (openedCards[0].dataset.card == openedCards[1].dataset.card) {
+                     openedCards.forEach(function (card) {
+                         card.classList.add("match", "open", "show");
+                     });
+
+                   openedCards = [];
+                 } else {
+                   setTimeout(function() {
+                     openedCards.forEach(function(card) {
+                       card.classList.remove("open", "show");
+                     });
+
+                     openedCards = [];
+                   }, 600);
+                 };
+             }
+
+             
+        };
+     });
+ });
