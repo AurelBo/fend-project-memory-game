@@ -31,9 +31,52 @@ for (let i = 0; i < iconsOfCards.length; i++) {
     container.appendChild(createCards);
 } */
 
+/****** FUNCTIONS *******/
+
+// Generate deck
+
 function generateCard(card) {
   return `<li class="card" data-card="${card}"><i class="fa ${card}"></i></li>`;
 };
+
+function initGame() {
+    const deck = document.querySelector('.deck');
+    let moveCounter = document.querySelector('.moves');
+
+    const cardHTML = shuffle(cards).map(function (card) {
+        return generateCard(card);
+    });
+    moves = 0;
+    moveCounter.innerText = moves;
+
+    deck.innerHTML = cardHTML.join('');
+}
+
+initGame();
+
+// Do they match? 
+
+function match() {
+    openedCards[0].classList.add('match', 'open', 'show')
+    openedCards[1].classList.add('match', 'open', "show")
+}
+
+function noMatch() {
+    setTimeout(function () {
+        openedCards[0].classList.remove('match', 'open', 'show')
+        openedCards[1].classList.remove('match', 'open', "show")
+
+        openedCards = [];
+    }, 500);
+}
+
+// End of the game
+
+function gameOver() {
+    if (matchedCards.length = 16) {
+        alert("you win!");
+    };
+}
 
 /*
  * Display the cards on the page
@@ -70,30 +113,11 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
- // from FEND webinar
-
- function initGame() {
-     const deck = document.querySelector('.deck');
-     let moveCounter = document.querySelector('.moves');
-
-     const cardHTML = shuffle(cards).map(function(card) {
-         return generateCard(card);
-     });
-     moves = 0;
-     moveCounter.innerText = moves;
-
-     deck.innerHTML = cardHTML.join('');
-}
-
-initGame();
-
-
  const deckOfCards = document.querySelectorAll('.card');
 
  //keeping track of the game
  let openedCards = [];
-
+ let matchedCards = [];
 
  // Opening and comparing cards
 
@@ -106,26 +130,19 @@ initGame();
 
              if (openedCards.length > 2){
                  card.classList.remove("open", "show");
-             } else if (openedCards.length == 2) {
-
+             }
+             
+             if (openedCards.length == 2) {
+                // Do they match? 
                  if (openedCards[0].dataset.card == openedCards[1].dataset.card) {
-                     openedCards.forEach(function (card) {
-                         card.classList.add("match", "open", "show");
-                     });
-
-                   openedCards = [];
+                     match();
+                     matchedCards.push(card);
+                     openedCards = [];                   
+                   //if it doesn't match...
                  } else {
-                   setTimeout(function() {
-                     openedCards.forEach(function(card) {
-                       card.classList.remove("open", "show");
-                     });
-
-                     openedCards = [];
-                   }, 600);
+                   noMatch();
                  };
              }
-
-             
-        };
+        }
      });
  });
