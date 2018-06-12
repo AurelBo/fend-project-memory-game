@@ -31,9 +31,7 @@ for (let i = 0; i < iconsOfCards.length; i++) {
     container.appendChild(createCards);
 } */
 
-/****** FUNCTIONS *******/
-
-// Generate deck
+/*****GENERATING THE GAME *****/
 
 function generateCard(card) {
   return `<li class="card" data-card="${card}"><i class="fa ${card}"></i></li>`;
@@ -41,18 +39,26 @@ function generateCard(card) {
 
 function initGame() {
     const deck = document.querySelector('.deck');
-    let moveCounter = document.querySelector('.moves');
-
     const cardHTML = shuffle(cards).map(function (card) {
         return generateCard(card);
     });
-    moves = 0;
-    moveCounter.innerText = moves;
-
     deck.innerHTML = cardHTML.join('');
 }
 
-initGame();
+
+/***** VARIABLES ******/
+
+const deckOfCards = document.querySelectorAll(".card");
+
+//keeping track of the game
+let openedCards = [];
+let matchedCards = [];
+
+const moveCounter = document.querySelector(".moves");
+let moves = 0;
+
+
+/****** FUNCTIONS *******/
 
 // Do they match? 
 
@@ -70,6 +76,14 @@ function noMatch() {
     }, 500);
 }
 
+//move counter
+
+function moveCount() {
+
+    moves++
+    moveCounter.innerText = moves;
+}
+
 // End of the game
 
 function gameOver() {
@@ -78,12 +92,17 @@ function gameOver() {
     };
 }
 
+
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
+
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -113,11 +132,7 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
- const deckOfCards = document.querySelectorAll('.card');
 
- //keeping track of the game
- let openedCards = [];
- let matchedCards = [];
 
  // Opening and comparing cards
 
@@ -133,12 +148,13 @@ function shuffle(array) {
              }
              
              if (openedCards.length == 2) {
-                // Do they match? 
+                 moveCount()
+                // If they match... 
                  if (openedCards[0].dataset.card == openedCards[1].dataset.card) {
                      match();
                      matchedCards.push(card);
                      openedCards = [];                   
-                   //if it doesn't match...
+                   //if they don't match...
                  } else {
                    noMatch();
                  };
@@ -146,3 +162,4 @@ function shuffle(array) {
         }
      });
  });
+initGame();
