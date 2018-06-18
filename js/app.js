@@ -45,6 +45,7 @@ function initGame() {
     deck.innerHTML = cardHTML.join('');
 }
 
+initGame();
 
 /***** VARIABLES ******/
 
@@ -57,6 +58,12 @@ let matchedCards = [];
 const moveCounter = document.querySelector(".moves");
 let moves = 0;
 
+
+let timer = document.querySelector('.timer');
+let minutes = 0;
+let seconds = 0;
+
+let newTime = false;
 
 /****** FUNCTIONS *******/
 
@@ -84,10 +91,22 @@ function moveCount() {
     moveCounter.innerText = moves;
 }
 
+function timeCounter() {
+
+    time = setInterval(function(){
+        seconds++;
+        if (seconds === 60){
+            minutes++;
+            seconds = 0
+        };
+        timer.innerHTML = minutes + ":" + seconds;
+    }, 1000);
+}
+
 // End of the game
 
 function gameOver() {
-    if (matchedCards.length = 16) {
+    if (matchedCards.length === 8) {
         alert("you win!");
     };
 }
@@ -138,9 +157,13 @@ function shuffle(array) {
 
  deckOfCards.forEach(function(card) {
      card.addEventListener('click',function(e) {
+         if(newTime === false){
+             newTime = true; 
+             timeCounter();
+         }
       
          if (!card.classList.contains('open') && !card.classList.contains('show')) {
-             openedCards.push(card);
+            openedCards.push(card);
              card.classList.add("open", "show");
 
              if (openedCards.length > 2){
@@ -153,7 +176,8 @@ function shuffle(array) {
                  if (openedCards[0].dataset.card == openedCards[1].dataset.card) {
                      match();
                      matchedCards.push(card);
-                     openedCards = [];                   
+                     openedCards = [];
+                     gameOver();           
                    //if they don't match...
                  } else {
                    noMatch();
@@ -162,4 +186,3 @@ function shuffle(array) {
         }
      });
  });
-initGame();
