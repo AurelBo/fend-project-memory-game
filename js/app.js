@@ -58,6 +58,13 @@ let matchedCards = [];
 const moveCounter = document.querySelector(".moves");
 let moves = 0;
 
+const star1 = document.getElementById("first-star");
+const star2 = document.getElementById("second-star");
+const star3 = document.getElementById("third-star");
+let starCounter = 3;
+
+const resetButton = document.querySelector(".restart");
+
 
 let timer = document.querySelector('.timer');
 let minutes = 0;
@@ -89,9 +96,17 @@ function moveCount() {
 
     moves++
     moveCounter.innerText = moves;
+
+    if(moves > 2 && moves < 5){
+        star1.style.display = "none";
+        starCounter = 2;
+    } else if(moves > 5){
+        star2.style.display = "none";
+        starCounter = 1;
+    };
 }
 
-function timeCounter() {
+function timeCount() {
 
     time = setInterval(function(){
         seconds++;
@@ -103,13 +118,19 @@ function timeCounter() {
     }, 1000);
 }
 
-// End of the game
-
 function gameOver() {
     if (matchedCards.length === 8) {
         alert("you win!");
     };
 }
+
+/* function resetTheGame() {
+
+};
+
+resetButton.addEventListener("click",function(e) {
+
+}; */
 
 
 
@@ -159,7 +180,7 @@ function shuffle(array) {
      card.addEventListener('click',function(e) {
          if(newTime === false){
              newTime = true; 
-             timeCounter();
+             timeCount();
          }
       
          if (!card.classList.contains('open') && !card.classList.contains('show')) {
