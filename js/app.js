@@ -98,10 +98,10 @@ function moveCount() {
     moveCounter.innerText = moves;
 
     if(moves > 2 && moves < 5){
-        star1.style.display = "none";
+        star3.style.visibility = "hidden";
         starCounter = 2;
     } else if(moves > 5){
-        star2.style.display = "none";
+        star2.style.visibility = "hidden";
         starCounter = 1;
     };
 }
