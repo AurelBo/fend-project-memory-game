@@ -107,3 +107,41 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+/*
+ * Style for the modal
+ */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: linear-gradient(160deg, #14ac9f 100%, #975bc9 0%);
+    margin: 20% auto;
+    padding: 20px;
+    width: 30%;
+    height: 30%;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.modal-content h2, 
+#stars-modal, 
+.modal-content p {
+    display: flex;
+    justify-content: center;
+}
+
+#moves-modal,
+#time-modal {
+    font-weight: bold;
+}

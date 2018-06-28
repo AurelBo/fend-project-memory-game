@@ -20,41 +20,33 @@ const cards = [
   "fa-bomb"
 ];
 
-
-// Generate cards
-/* const container = document.querySelector(".deck");
-
-for (let i = 0; i < iconsOfCards.length; i++) {
-    const createCards = document.createElement("li");
-    createCards.classList.add("card");
-    createCards.innerHTML = `<i class="fa ${iconsOfCards[i]}"></i>`;
-    container.appendChild(createCards);
-} */
-
 /*****GENERATING THE GAME *****/
 
-function generateCard(card) {
-  return `<li class="card" data-card="${card}"><i class="fa ${card}"></i></li>`;
-};
+const deck = document.querySelector(".deck");
 
-function initGame() {
-    const deck = document.querySelector('.deck');
-    const cardHTML = shuffle(cards).map(function (card) {
-        return generateCard(card);
-    });
-    deck.innerHTML = cardHTML.join('');
+let cardHTML = shuffle(cards).map(function(card) {
+    return generateCard(card);
+}); 
+
+
+function generateCard(card) {
+  return `<li class="card"><i class="fa ${card}"></i></li>`;
 }
 
+function initGame() {
+    deck.innerHTML = cardHTML.join('');
+}
 initGame();
 
 /***** VARIABLES ******/
 
 const deckOfCards = document.querySelectorAll(".card");
+const shuffleCards = shuffle(cards);
+const resetButton = document.getElementById("reset");
 
 //keeping track of the game
 let openedCards = [];
 let matchedCards = [];
-
 const moveCounter = document.querySelector(".moves");
 let moves = 0;
 
@@ -63,7 +55,6 @@ const star2 = document.getElementById("second-star");
 const star3 = document.getElementById("third-star");
 let starCounter = 3;
 
-const resetButton = document.querySelector(".restart");
 
 
 let timer = document.querySelector('.timer');
@@ -72,7 +63,31 @@ let seconds = 0;
 
 let newTime = false;
 
+let reverse = false;
+
+//modal
+const modal = document.querySelector('.modal');
+let starsModal = document.getElementById("stars-modal");
+let movesModal = document.getElementById("moves-modal");
+let timeModal = document.getElementById("time-modal");
+
+/****** EVENT LISTENERS *****/
+
+window.addEventListener("click", outsideClick);
+resetButton.addEventListener("click", resetClick);
+
 /****** FUNCTIONS *******/
+
+/* function newGame(){
+    for (let i = 0; i < shuffleCards.length; i++) {
+        const createCard = document.createElement("li");
+        createCard.classList.add("card");
+        createCard.innerHTML = `<i class="fa ${shuffleCards[i]}"/></li>`;
+        deck.appendChild(createCard);
+    }
+}
+newGame(); */
+
 
 // Do they match? 
 
@@ -97,10 +112,10 @@ function moveCount() {
     moves++
     moveCounter.innerText = moves;
 
-    if(moves > 2 && moves < 5){
+    if (moves <= 10){
         star3.style.visibility = "hidden";
         starCounter = 2;
-    } else if(moves > 5){
+    } else if(moves > 10 && moves <= 17){
         star2.style.visibility = "hidden";
         starCounter = 1;
     };
@@ -114,24 +129,48 @@ function timeCount() {
             minutes++;
             seconds = 0
         };
-        timer.innerHTML = minutes + ":" + seconds;
+        timer.innerHTML = doubleDigit(minutes) + ":" + doubleDigit(seconds);
     }, 1000);
+    
 }
 
-function gameOver() {
+function doubleDigit(digit) {
+    if (digit < 10) {
+        return "0" + digit;
+    } else {
+        return digit;
+    }
+}
+
+//Modal
+
+function isOver() {
+    /* TODO:
+     * Passer au reset
+     * Styliser le bloc temps, moves etc... dans le css.
+     */
     if (matchedCards.length === 8) {
-        alert("you win!");
+        console.log("you win!");
+        modal.style.display = "block";
+        movesModal.innerText = `${moves} moves`;
+        timeModal.innerText = doubleDigit(minutes) + ":" + doubleDigit(seconds) + " minutes";
+        clearInterval(time);
+
+        if(moves <= 10){
+            starsModal.innerHTML = `<i class="fa fa-star"><i class="fa fa-star"><i class="fa fa-star">`;
+        } else if (moves > 10 && moves <= 17) {
+            starsModal.innerHTML = `<i class="fa fa-star"><i class="fa fa-star">`;
+        } else if (moves > 17){
+            starsModal.innerHTML = `<i class="fa fa-star">`;
+        }
     };
 }
 
-/* function resetTheGame() {
-
-};
-
-resetButton.addEventListener("click",function(e) {
-
-}; */
-
+function outsideClick(e) {
+    if (e.target == modal) {
+        modal.style.display = "none";
+    };
+}
 
 
 /*
@@ -194,11 +233,11 @@ function shuffle(array) {
              if (openedCards.length == 2) {
                  moveCount()
                 // If they match... 
-                 if (openedCards[0].dataset.card == openedCards[1].dataset.card) {
-                     match();
-                     matchedCards.push(card);
-                     openedCards = [];
-                     gameOver();           
+                 if (openedCards[0].innerHTML == openedCards[1].innerHTML) {
+                   match();
+                   matchedCards.push(card);
+                   openedCards = [];
+                   isOver();
                    //if they don't match...
                  } else {
                    noMatch();
@@ -207,3 +246,39 @@ function shuffle(array) {
         }
      });
  });
+
+/*function resetGame() {
+
+    // reset time
+    minutes = 0;
+    seconds = 0;
+    starCounter = 3;
+    newTime = false;
+    
+    // reset stars
+    star3.style.visibility = "inherit";
+    star2.style.visibility = "inherit";
+
+    // reset moves
+    moves = 0;
+    moveCounter.innerText = moves;
+    timer.innerHTML = "00:00";
+    clearInterval(time);
+
+    openedCards = [];
+    matchedCards = [];
+
+    // Hides all cards
+    deckOfCards.forEach(function (card) {
+        card.classList.remove("match", "open", "show");
+        card.classList.remove("match", "open", "show");
+    })
+
+}*/
+
+//Event listener on l.77
+ function resetClick(card) {
+    //resetGame();
+    //generateCard(card);
+    window.location.reload(true);
+}
