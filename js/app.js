@@ -70,11 +70,13 @@ const modal = document.querySelector('.modal');
 let starsModal = document.getElementById("stars-modal");
 let movesModal = document.getElementById("moves-modal");
 let timeModal = document.getElementById("time-modal");
+let btnModal = document.getElementById("btn-modal");
 
 /****** EVENT LISTENERS *****/
 
 window.addEventListener("click", outsideClick);
 resetButton.addEventListener("click", resetClick);
+btnModal.addEventListener("click", resetModalClick);
 
 /****** FUNCTIONS *******/
 
@@ -108,9 +110,14 @@ function noMatch() {
 //move counter
 
 function moveCount() {
-
-    moves++
-    moveCounter.innerText = moves;
+    if (moves <= 0){
+        moves++
+        moveCounter.innerText = moves + " move";
+    } else {
+        moves++
+        moveCounter.innerText = moves + " moves";
+    }
+    
 
     if (moves <= 10){
         star3.style.visibility = "hidden";
@@ -152,7 +159,7 @@ function isOver() {
     if (matchedCards.length === 8) {
         console.log("you win!");
         modal.style.display = "block";
-        movesModal.innerText = `${moves} moves`;
+        movesModal.innerText = `${moves}`;
         timeModal.innerText = doubleDigit(minutes) + ":" + doubleDigit(seconds) + " minutes";
         clearInterval(time);
 
@@ -277,8 +284,12 @@ function shuffle(array) {
 }*/
 
 //Event listener on l.77
- function resetClick(card) {
+ function resetClick() {
     //resetGame();
     //generateCard(card);
+    window.location.reload(true);
+}
+
+function resetModalClick() {
     window.location.reload(true);
 }
